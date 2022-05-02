@@ -15,7 +15,10 @@ def get_data(user, passwd):
     """
 
     response = requests.post(endpoint, json={"query": query}, auth=auth)
-    return response
+    return response.json()
+
+def get_date_from_response(response):
+    return response['data']['user']['contributionsCollection']['endedAt']
 
 def main():
     pass
