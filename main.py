@@ -1,6 +1,7 @@
 import requests
 import sys
 from requests.auth import HTTPBasicAuth
+import datetime
 
 def get_data(user, passwd):
     auth = HTTPBasicAuth(user, passwd)
@@ -18,7 +19,9 @@ def get_data(user, passwd):
     return response.json()
 
 def get_date_from_response(response):
-    return response['data']['user']['contributionsCollection']['endedAt']
+    date = response['data']['user']['contributionsCollection']['endedAt']
+    date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ')
+    return date
 
 def main():
     pass
