@@ -20,8 +20,20 @@ import datetime
 def send_mail():
     pass
 
+
 def get_data(user, token):
+    auth = HTTPBasicAuth(user, token)
+    repo_list = get_repo_list(auth)
     pass
+
+def get_repo_list(auth):
+    endpoint = 'https://api.github.com/users/torvalds/repos'
+    response = requests.get(endpoint, auth=auth).json()
+    repo_list = []
+    for repo in range(len(response)):
+        repo_list.append(response[repo]['url'])
+    print(repo_list)
+    return repo_list
 
 def get_datetime_from_date_string(date):
     #date = response['data']['user']['contributionsCollection']['endedAt']
