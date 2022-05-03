@@ -26,15 +26,24 @@ def get_data(user, token):
     response = requests.get(endpoint, auth=auth)
     return response.json()
 
-def get_date_from_response(response):
+def get_datetime_from_date_string(date):
     #date = response['data']['user']['contributionsCollection']['endedAt']
-    date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ')
+    #date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ')
+    date = datetime.datetime.strptime(date[:-10], '%Y-%m-%dT%H:%M:%S')
     return date
 
 def main():
     data = get_data(sys.argv[1], sys.argv[2])
-    last_commit_date = data['items'][0]['commit']['author']['date']
+    ## Some dates returned are far in the future, i.e. 2099 or 2038
+    ## I also don't really care about commits done before 2022, so the below code
+    ## Should get rid of those future commits in response
+    for i in range(len(data['items'])):
+        last_commit_date = data['items'][i]['commit']['author']['date']
+        if last_commit_date[:4] == '2022':
+            break
+    last_commit_date = get_datetime_from_date_string(last_commit_date)
     print(last_commit_date)
+
 
 
 if __name__ == '__main__':
