@@ -17,6 +17,8 @@ import datetime
 #
 #    response = requests.post(endpoint, json={"query": query}, auth=auth)
 #    return response.json()
+def send_mail():
+    pass
 
 def get_data(user, token):
     """Returns latest commits by Torvalds sorted by date. Two major notes, one is that github only 
@@ -33,15 +35,28 @@ def get_datetime_from_date_string(date):
     return date
 
 def main():
+    latest_mail_send_date = None
+    latest_commit_date = None
+
     data = get_data(sys.argv[1], sys.argv[2])
     ## Some dates returned are far in the future, i.e. 2099 or 2038
     ## I also don't really care about commits done before 2022, so the below code
     ## Should get rid of those future commits in response
     for i in range(len(data['items'])):
-        last_commit_date = data['items'][i]['commit']['author']['date']
-        if last_commit_date[:4] == '2022':
+        last_extracted_commit_date = data['items'][i]['commit']['author']['date']
+        if last_extracted_commit_date[:4] == '2022':
             break
-    last_commit_date = get_datetime_from_date_string(last_commit_date)
+    last_extracted_commit_date = get_datetime_from_date_string(last_commit_date)
+
+    if latest_commit_date == None:
+        latest_commit_date = last_extracted_commit_date
+    if latest_commit_date != last_extracted_commit_date:
+        print("Detected new commit!")
+        print("Old commit date was: ", latest_commit_date)
+        print("New commit date is: ", last_extracted_commit_date)
+        if latest_mail_send_date == None or latest_mail_send_date > latest_mail_send_date - datetime.timedelta(hours=24):
+            send_mail()
+            latest_mail_send_date = datetime.datetime.mow()
     print(last_commit_date)
 
 
