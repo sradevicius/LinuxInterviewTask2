@@ -2,6 +2,7 @@ import requests
 import sys
 from requests.auth import HTTPBasicAuth
 import datetime
+import time
 
 
 def send_mail():
@@ -25,9 +26,23 @@ def main():
     latest_mail_send_date = None
     latest_commit_date = None
 
-    date = get_latest_push_date(sys.argv[1], sys.argv[2])
-    print(date)
-    pass
+    while True:
+        date = get_latest_push_date(sys.argv[1], sys.argv[2])
+        latest_push_time = get_datetime_from_date_string(date)
+        print("Print latest detected push time: ", latest_push_time)
+        if latest_commit_date == None:
+            latest_commit_date = latest_push_time
+        if latest_commit_date != latest_push_time:
+            print("Detected new push!")
+            print("Last push time: ", last_commit_date)
+            print("New push time: ", latest_push_time)
+            if latest_mail_send_date == None or datetime.datetime.now() - datetime.timedelta(hours=24) > latest_mail_send_date:
+                send_mail()
+                latest_mail_send_date = datetime.datetime.now()
+
+        print("Sleeping for 10 minutes")
+        print("*"*20)
+        time.sleep(600)
 
 
 if __name__ == '__main__':
