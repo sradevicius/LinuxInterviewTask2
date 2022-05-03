@@ -3,9 +3,14 @@
 ## Usage
 
 This script can be used on it's own or it can be used in docker container. Repo contains dockerfile, so you can create image yourself with docker build
-Both script and container expects 'username' and 'token' environment variables to be passed on. In case of docker image I recomment to use -e flags to pass them on
+Both script and container expects 'username', 'token', 'email', 'reciever_email', and 'email_password'  environment variables to be passed on. In case of docker image I recomment to use -e flags to pass them on
 Docker image has also been [uploaded to dockerhub](https://hub.docker.com/r/sradevicius/linux_interview_test2)
 
-## ToDo
+## Issues/Problems/Limitations
+I used simple SMTP login function to connect to my test gmail account, and it used password passed as environment variabled to script.
+This is not a very good idea, as from security point of view I should look into implementing someking of Oauth authorization mechanism
+<br>
+Also this script picks up new pushed to git as commits but does not pick up cration of new repo as commit. 
 
-I still haven't written code to send email once commit is detected.
+## ToDo
+Create somekind of Oauth log in for email
