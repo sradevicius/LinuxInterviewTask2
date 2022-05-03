@@ -4,10 +4,15 @@ from requests.auth import HTTPBasicAuth
 import datetime
 import time
 import os
+import ssl, smtplib
 
 
-def send_mail():
-    pass
+def send_mail(email=sender_email, receiver_email=receiver_email, password=email_password, message="New commit by Torvalds detected!"):
+    port = 465
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+        server.login(email, password)
+        server.sendmail(email, receiver_email, message)
 
 
 def get_latest_push_date(user, token):
@@ -26,6 +31,7 @@ def get_datetime_from_date_string(date):
 def main():
     latest_mail_send_date = None
     latest_commit_date = None
+    send_mail(message="Script to detect Torvalds new commits started!")
 
     while True:
         date = get_latest_push_date(username, token)
@@ -54,6 +60,9 @@ if __name__ == '__main__':
     try:
         username = os.environ['username']
         token = os.environ['token']
+        email = os.environ['email']
+        email_password = os.environ['email_password']
+        receiver_email = os.environ['receiver_email']
     except:
         print("Failed to get environment variables for username and github token")
     else:
