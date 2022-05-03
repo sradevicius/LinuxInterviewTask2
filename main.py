@@ -3,6 +3,7 @@ import sys
 from requests.auth import HTTPBasicAuth
 import datetime
 import time
+import os
 
 
 def send_mail():
@@ -27,7 +28,7 @@ def main():
     latest_commit_date = None
 
     while True:
-        date = get_latest_push_date(sys.argv[1], sys.argv[2])
+        date = get_latest_push_date(username, token)
         latest_push_time = get_datetime_from_date_string(date)
         print("Print latest detected push time: ", latest_push_time)
         if latest_commit_date == None:
@@ -46,7 +47,14 @@ def main():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
-        main()
+    #if len(sys.argv) == 3:
+    #    main()
+    #else:
+    #    print ("This script required username and git token to be provided as command line arguments")
+    try:
+        username = os.environ['username']
+        token = os.environ['token']
+    except:
+        print("Failed to get environment variables for username and github token")
     else:
-        print ("This script required username and git token to be provided as command line arguments")
+        main()
