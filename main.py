@@ -7,11 +7,12 @@ import os
 import ssl, smtplib
 
 
-def send_mail(email=sender_email, receiver_email=receiver_email, password=email_password, message="New commit by Torvalds detected!"):
+#def send_mail(email=email, receiver_email=receiver_email, password=email_password, message="New commit by Torvalds detected!"):
+def send_mail(message="New commit by Torvalds detected!"):
     port = 465
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-        server.login(email, password)
+        server.login(email, email_password)
         server.sendmail(email, receiver_email, message)
 
 
@@ -31,6 +32,7 @@ def get_datetime_from_date_string(date):
 def main():
     latest_mail_send_date = None
     latest_commit_date = None
+    #Send a quick email for debugging, so I could see script is working
     send_mail(message="Script to detect Torvalds new commits started!")
 
     while True:
@@ -63,6 +65,7 @@ if __name__ == '__main__':
         email = os.environ['email']
         email_password = os.environ['email_password']
         receiver_email = os.environ['receiver_email']
+        print("Read in all env variabled!")
     except:
         print("Failed to get environment variables for username and github token")
     else:
