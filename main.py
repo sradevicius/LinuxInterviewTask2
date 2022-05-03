@@ -42,7 +42,7 @@ def get_latest_push_date(user, token):
 def get_datetime_from_date_string(date):
     #date = response['data']['user']['contributionsCollection']['endedAt']
     #date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ')
-    date = datetime.datetime.strptime(date[:-10], '%Y-%m-%dT%H:%M:%S')
+    date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ')
     return date
 
 def main():
@@ -50,6 +50,7 @@ def main():
     latest_commit_date = None
 
     date = get_latest_push_date(sys.argv[1], sys.argv[2])
+    date = get_datetime_from_date_string(date)
     print(date)
     ## Some dates returned are far in the future, i.e. 2099 or 2038
     ## I also don't really care about commits done before 2022, so the below code
