@@ -47,4 +47,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 3:
+        main()
+    else:
+        print ("This script required username and git token to be provided as command line arguments")
