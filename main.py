@@ -30,7 +30,7 @@ def get_date_from_response(response):
     return date
 
 def main():
-    print(get_data(sys.argv[1], sys.argv[2]))
+    print(get_data(sys.argv[1], sys.argv[2])['items'][0]['commit'])
 
 
 if __name__ == '__main__':
