@@ -1,4 +1,4 @@
-FROM centos
+FROM python
 RUN mkdir -p /app
 COPY . /app
 WORKDIR /app
