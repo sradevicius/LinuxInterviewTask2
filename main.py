@@ -21,19 +21,23 @@ def send_mail():
     pass
 
 
-def get_data(user, token):
+def get_latest_push_date(user, token):
     auth = HTTPBasicAuth(user, token)
-    repo_list = get_repo_list(auth)
+    endpoint = 'https://api.github.com/users/torvalds/events/public'
+    response = requests.get(endpoint, auth=auth)
+    for i in range(len(response.json())):
+        if response.json()[i]['type'] == 'PushEvent':
+            return response.json()[i]['created_at']
     pass
 
-def get_repo_list(auth):
-    endpoint = 'https://api.github.com/users/torvalds/repos'
-    response = requests.get(endpoint, auth=auth).json()
-    repo_list = []
-    for repo in range(len(response)):
-        repo_list.append(response[repo]['url'])
-    print(repo_list)
-    return repo_list
+#def get_repo_list(auth):
+#    endpoint = 'https://api.github.com/users/torvalds/repos'
+#    response = requests.get(endpoint, auth=auth).json()
+#    repo_list = []
+#    for repo in range(len(response)):
+#        repo_list.append(response[repo]['url'])
+#    print(repo_list)
+#    return repo_list
 
 def get_datetime_from_date_string(date):
     #date = response['data']['user']['contributionsCollection']['endedAt']
@@ -45,7 +49,8 @@ def main():
     latest_mail_send_date = None
     latest_commit_date = None
 
-    data = get_data(sys.argv[1], sys.argv[2])
+    date = get_latest_push_date(sys.argv[1], sys.argv[2])
+    print(date)
     ## Some dates returned are far in the future, i.e. 2099 or 2038
     ## I also don't really care about commits done before 2022, so the below code
     ## Should get rid of those future commits in response
